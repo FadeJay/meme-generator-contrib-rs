@@ -239,7 +239,7 @@ jobs:
       - name: 构建项目
         run: |
           source $HOME/.cargo/env
-          export RUSTFLAGS="-C link-args=-static-libstdc++"
+          export RUSTFLAGS="-C link-args=/usr/lib/gcc/x86_64-redhat-linux/8/libstdc++.a"
           echo "Using RUSTFLAGS=$RUSTFLAGS"
           cargo build --release --target x86_64-unknown-linux-gnu --verbose
 
