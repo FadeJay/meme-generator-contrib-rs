@@ -223,6 +223,7 @@ jobs:
         run: |
           rpm -q libstdc++-static || echo "libstdc++-static 未安装"
           ls -l /usr/lib64/libstdc++.a || echo "libstdc++.a 不存在"
+          rpm -ql libstdc++-static | grep libstdc++.a
 
       - name: 安装 Rust
         run: |
