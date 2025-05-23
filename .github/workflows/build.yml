@@ -191,8 +191,12 @@ jobs:
         run: |
           dnf install -y epel-release
           dnf install -y dnf-plugins-core
-          dnf config-manager --set-enabled powertools || true
-          dnf config-manager --set-enabled PowerTools || true  # 不同仓库名都尝试
+          dnf config-manager --set-enabled PowerTools || \
+          dnf config-manager --set-enabled powertools || \
+          curl -o /etc/yum.repos.d/CentOS-PowerTools.repo https://vault.centos.org/8.5.2111/PowerTools/x86_64/os/CentOS-PowerTools.repo && \
+          sed -i 's/enabled=0/enabled=1/' /etc/yum.repos.d/CentOS-PowerTools.repo
+          dnf clean all
+          dnf makecache
           dnf update -y
           dnf install -y \
             gcc gcc-c++ make cmake \
