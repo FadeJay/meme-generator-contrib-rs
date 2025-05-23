@@ -204,10 +204,6 @@ jobs:
         run: |
           dnf install -y epel-release
           dnf install -y dnf-plugins-core
-          dnf config-manager --set-enabled PowerTools || \
-          dnf config-manager --set-enabled powertools || \
-          curl -o /etc/yum.repos.d/CentOS-PowerTools.repo https://vault.centos.org/8.5.2111/PowerTools/x86_64/os/CentOS-PowerTools.repo && \
-          sed -i 's/enabled=0/enabled=1/' /etc/yum.repos.d/CentOS-PowerTools.repo
           dnf clean all
           dnf makecache
           dnf update -y
@@ -239,7 +235,7 @@ jobs:
       - name: 构建项目
         run: |
           source $HOME/.cargo/env
-          export RUSTFLAGS="-C link-args=/usr/lib/gcc/x86_64-redhat-linux/8/libstdc++.a"
+          export RUSTFLAGS="-C target-feature=+crt-static -C link-arg=-static"
           echo "Using RUSTFLAGS=$RUSTFLAGS"
           cargo build --release --target x86_64-unknown-linux-gnu --verbose
 
