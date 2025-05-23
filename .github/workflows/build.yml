@@ -130,9 +130,9 @@ jobs:
           name: meme-generator-contrib-linux-centos8
           path: target/x86_64-unknown-linux-gnu/release/*.so
 
-  build_centos_stream8:
+  build_centos_stream9:
     runs-on: ubuntu-latest
-    container: quay.io/centos/centos:stream8
+    container: quay.io/centos/centos:stream9
 
     steps:
       - name: Use faster mirrors (Aliyun)
@@ -142,12 +142,10 @@ jobs:
           dnf clean all
           dnf makecache
 
-      - name: Install dependencies and GCC 11
+      - name: Install dependencies
         run: |
-          dnf install -y epel-release dnf-plugins-core
-          dnf module enable -y gcc-toolset-11
-          dnf install -y gcc-toolset-11 gcc-toolset-11-gcc-c++ \
-            make git curl pkgconfig \
+          dnf install -y epel-release
+          dnf install -y gcc gcc-c++ make git curl pkgconfig \
             openssl-devel fontconfig-devel freetype-devel which
 
       - name: Install Rust
@@ -156,25 +154,20 @@ jobs:
           echo "source $HOME/.cargo/env" >> ~/.bashrc
         shell: bash
 
-      - name: Enable GCC 11 environment and check version
-        run: |
-          source /opt/rh/gcc-toolset-11/enable
-          gcc --version
-        shell: bash
+      - name: Check GCC version
+        run: gcc --version
 
-      - name: Checkout source code
+      - name: Checkout source
         uses: actions/checkout@v4
 
       - name: Setup Rust target
         run: |
-          source /opt/rh/gcc-toolset-11/enable
           source $HOME/.cargo/env
           rustup target add x86_64-unknown-linux-gnu
         shell: bash
 
       - name: Build with static libstdc++
         run: |
-          source /opt/rh/gcc-toolset-11/enable
           source $HOME/.cargo/env
           export RUSTFLAGS="-C link-arg=-static-libstdc++"
           cargo build --release --target x86_64-unknown-linux-gnu
@@ -183,5 +176,5 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: meme-generator-contrib-centos-stream8-static
+          name: meme-generator-contrib-centos-stream9-static
           path: target/x86_64-unknown-linux-gnu/release/*.so
