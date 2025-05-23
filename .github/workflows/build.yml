@@ -82,7 +82,7 @@ jobs:
           path: |
             target/${{ matrix.platform.target }}/release/*.so
 
-build_centos:
+  build_centos:
     runs-on: ubuntu-latest
     container: centos:8
     steps:
@@ -113,5 +113,6 @@ build_centos:
         with:
           name: meme-generator-contrib-linux-centos8
           path: target/x86_64-unknown-linux-gnu/release/*.so
+
 
 
