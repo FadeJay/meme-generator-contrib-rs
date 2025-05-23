@@ -198,7 +198,8 @@ jobs:
             fontconfig-devel \
             freetype-devel \
             pkgconfig \
-            curl git wget
+            curl git wget \
+            libstdc++-static
 
       - name: 安装 Rust
         run: |
