@@ -190,11 +190,11 @@ jobs:
       - name: 添加 PowerTools 仓库并安装 libstdc++-static
         run: |
           echo "[PowerTools]
-name=CentOS-8.5.2111 - PowerTools
-baseurl=https://vault.centos.org/8.5.2111/PowerTools/\$basearch/os/
-enabled=1
-gpgcheck=1
-gpgkey=https://vault.centos.org/8.5.2111/RPM-GPG-KEY-CentOS-Official" > /etc/yum.repos.d/CentOS-PowerTools.repo
+          name=CentOS-8.5.2111 - PowerTools
+          baseurl=https://vault.centos.org/8.5.2111/PowerTools/\$basearch/os/
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://vault.centos.org/8.5.2111/RPM-GPG-KEY-CentOS-Official" > /etc/yum.repos.d/CentOS-PowerTools.repo
 
           dnf clean all
           dnf makecache
