@@ -187,20 +187,18 @@ jobs:
           yum clean all
           yum makecache
 
-      - name: 安装依赖
+      - name: 安装基础依赖
         run: |
-          yum groupinstall -y "Development Tools"
-          yum install -y \
-            cmake \
-            gcc gcc-c++ \
-            make \
-            curl \
-            git \
+          dnf install -y epel-release
+          dnf config-manager --set-enabled powertools || true
+          dnf update -y
+          dnf install -y \
+            gcc gcc-c++ make cmake \
             openssl-devel \
-            freetype-devel \
             fontconfig-devel \
+            freetype-devel \
             pkgconfig \
-            which
+            curl git wget
 
       - name: 安装 Rust
         run: |
