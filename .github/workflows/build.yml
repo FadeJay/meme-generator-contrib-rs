@@ -203,6 +203,11 @@ jobs:
             curl git wget \
             libstdc++-static
 
+      - name: 验证 libstdc++-static 是否安装
+        run: |
+          rpm -q libstdc++-static || echo "libstdc++-static 未安装"
+          ls -l /usr/lib64/libstdc++.a || echo "libstdc++.a 不存在"
+
       - name: 安装 Rust
         run: |
           curl https://sh.rustup.rs -sSf | sh -s -- -y
