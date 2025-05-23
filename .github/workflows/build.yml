@@ -130,45 +130,46 @@ jobs:
           name: meme-generator-contrib-linux-centos8
           path: target/x86_64-unknown-linux-gnu/release/*.so
 
-  build_centos_stream9:
+  build_centos9:
     runs-on: ubuntu-latest
-    container: quay.io/centos/centos:stream9
+    container:
+      image: quay.io/centos/centos:stream9
 
     steps:
-
-      - name: Install dependencies
+      - name: 安装基础依赖
         run: |
           dnf install -y epel-release
-          dnf install -y gcc gcc-c++ make git curl pkgconfig \
-            openssl-devel fontconfig-devel freetype-devel which
+          dnf update -y
+          dnf install -y --allowerasing \
+            gcc gcc-c++ make cmake \
+            openssl-devel \
+            fontconfig-devel \
+            freetype-devel \
+            pkgconf-pkg-config \
+            curl \
+            git
 
-      - name: Install Rust
+      - name: 安装 Rust
         run: |
           curl https://sh.rustup.rs -sSf | sh -s -- -y
-          echo "source $HOME/.cargo/env" >> ~/.bashrc
-        shell: bash
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
-      - name: Check GCC version
-        run: gcc --version
-
-      - name: Checkout source
+      - name: 检出仓库
         uses: actions/checkout@v4
 
-      - name: Setup Rust target
+      - name: 添加编译目标（如有）
         run: |
           source $HOME/.cargo/env
           rustup target add x86_64-unknown-linux-gnu
-        shell: bash
 
-      - name: Build with static libstdc++
+      - name: 构建项目
         run: |
           source $HOME/.cargo/env
-          export RUSTFLAGS="-C link-arg=-static-libstdc++"
           cargo build --release --target x86_64-unknown-linux-gnu
-        shell: bash
 
-      - name: Upload build artifacts
+      - name: 上传构建产物
         uses: actions/upload-artifact@v4
         with:
-          name: meme-generator-contrib-centos-stream9-static
-          path: target/x86_64-unknown-linux-gnu/release/*.so
+          name: libmeme_generator_contrib
+          path: |
+            target/x86_64-unknown-linux-gnu/release/*.so
