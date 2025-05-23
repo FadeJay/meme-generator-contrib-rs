@@ -190,7 +190,9 @@ jobs:
       - name: 安装基础依赖
         run: |
           dnf install -y epel-release
+          dnf install -y dnf-plugins-core
           dnf config-manager --set-enabled powertools || true
+          dnf config-manager --set-enabled PowerTools || true  # 不同仓库名都尝试
           dnf update -y
           dnf install -y \
             gcc gcc-c++ make cmake \
