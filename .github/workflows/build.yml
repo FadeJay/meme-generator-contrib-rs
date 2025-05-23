@@ -235,7 +235,7 @@ jobs:
       - name: 构建项目
         run: |
           source $HOME/.cargo/env
-          export RUSTFLAGS="-C link-arg=-Wl,-Bstatic -C link-arg=-lstdc++ -C link-arg=-Wl,-Bdynamic"
+          export RUSTFLAGS='-C link-args="-Wl,-Bstatic -lstdc++ -Wl,-Bdynamic"'
           echo "Using RUSTFLAGS=$RUSTFLAGS"
           cargo build --release --target x86_64-unknown-linux-gnu --verbose
 
@@ -243,5 +243,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: libmeme_generator_contrib8
-          path: target/x86_64-unknown-linux-gnu/release/*.a
+          path: target/x86_64-unknown-linux-gnu/release/*.so
 
