@@ -243,5 +243,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: libmeme_generator_contrib8
-          path: target/x86_64-unknown-linux-gnu/release/*.so
+          path: target/x86_64-unknown-linux-gnu/release/*.a
 
