@@ -174,35 +174,39 @@ jobs:
           path: |
             target/x86_64-unknown-linux-gnu/release/*.so
 
-  build_centos8:
+  build_rocky8:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/centos/centos:8
+      image: rockylinux:8
 
     steps:
+      - name: 修复系统 yum 源（Rocky 8 已可用，但确认清理缓存）
+        run: |
+          yum clean all
+          yum makecache
+
       - name: 安装基础依赖
         run: |
-          yum install -y epel-release
-          yum update -y
-          yum install -y \
+          dnf install -y epel-release
+          dnf update -y
+          dnf install -y --allowerasing \
             gcc gcc-c++ make cmake \
             openssl-devel \
             fontconfig-devel \
             freetype-devel \
-            pkgconfig \
+            pkgconf-pkg-config \
             curl \
-            git \
-            which
+            git
 
       - name: 安装 Rust
         run: |
           curl https://sh.rustup.rs -sSf | sh -s -- -y
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
-      - name: 检出仓库
+      - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: 添加编译目标（如有）
+      - name: 添加编译目标（如需要交叉编译）
         run: |
           source $HOME/.cargo/env
           rustup target add x86_64-unknown-linux-gnu
@@ -212,13 +216,8 @@ jobs:
           source $HOME/.cargo/env
           cargo build --release --target x86_64-unknown-linux-gnu
 
-      - name: Strip so 文件（可选）
-        run: |
-          strip target/x86_64-unknown-linux-gnu/release/libmeme_generator_contrib.so || true
-
       - name: 上传构建产物
         uses: actions/upload-artifact@v4
         with:
           name: libmeme_generator_contrib
-          path: |
-            target/x86_64-unknown-linux-gnu/release/libmeme_generator_contrib.so
+          path: target/x86_64-unknown-linux-gnu/release/*.so
