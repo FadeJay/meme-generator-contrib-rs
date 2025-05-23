@@ -178,15 +178,21 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: quay.io/centos/centos:8
+
     steps:
+      - name: 修复 CentOS 8 镜像源
+        run: |
+          sed -i 's|^mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-*
+          sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+          yum clean all
+          yum makecache
+
       - name: 安装依赖
         run: |
-          yum install -y epel-release
           yum groupinstall -y "Development Tools"
           yum install -y \
             cmake \
             gcc gcc-c++ \
-            clang \
             make \
             curl \
             git \
