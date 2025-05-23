@@ -130,9 +130,9 @@ jobs:
           name: meme-generator-contrib-linux-centos8
           path: target/x86_64-unknown-linux-gnu/release/*.so
 
-  build_centos_static:
+  build_centos_stream8:
     runs-on: ubuntu-latest
-    container: centos:8
+    container: quay.io/centos/centos:stream8
 
     steps:
       - name: Use faster mirrors (Aliyun)
@@ -144,9 +144,7 @@ jobs:
 
       - name: Install dependencies and GCC 11
         run: |
-          dnf install -y epel-release
-          dnf install -y dnf-plugins-core
-          dnf config-manager --set-enabled powertools || true
+          dnf install -y epel-release dnf-plugins-core
           dnf module enable -y gcc-toolset-11
           dnf install -y gcc-toolset-11 gcc-toolset-11-gcc-c++ \
             make git curl pkgconfig \
@@ -158,14 +156,13 @@ jobs:
           echo "source $HOME/.cargo/env" >> ~/.bashrc
         shell: bash
 
-      - name: Enable GCC 11 environment
+      - name: Enable GCC 11 environment and check version
         run: |
-          echo "source /opt/rh/gcc-toolset-11/enable" >> ~/.bashrc
           source /opt/rh/gcc-toolset-11/enable
           gcc --version
         shell: bash
 
-      - name: Checkout source
+      - name: Checkout source code
         uses: actions/checkout@v4
 
       - name: Setup Rust target
@@ -175,7 +172,7 @@ jobs:
           rustup target add x86_64-unknown-linux-gnu
         shell: bash
 
-      - name: Build (static libstdc++)
+      - name: Build with static libstdc++
         run: |
           source /opt/rh/gcc-toolset-11/enable
           source $HOME/.cargo/env
@@ -183,8 +180,8 @@ jobs:
           cargo build --release --target x86_64-unknown-linux-gnu
         shell: bash
 
-      - name: Upload artifact
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: meme-generator-contrib-centos8-static
+          name: meme-generator-contrib-centos-stream8-static
           path: target/x86_64-unknown-linux-gnu/release/*.so
