@@ -135,12 +135,6 @@ jobs:
     container: quay.io/centos/centos:stream9
 
     steps:
-      - name: Use faster mirrors (Aliyun)
-        run: |
-          sed -i 's|^mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-*
-          sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=https://mirrors.aliyun.com|g' /etc/yum.repos.d/CentOS-*
-          dnf clean all
-          dnf makecache
 
       - name: Install dependencies
         run: |
